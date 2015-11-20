@@ -41,13 +41,17 @@ public class CoreService {
 			if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_TEXT)) {
 				//respContent = "您发送的是文本消息！";
 				//Content
-				String name = requestMap.get("Content");
-				if(name.equals("huskar")){
+				String content = requestMap.get("Content");
+				if(content.equals("huskar")){
 					respContent = "Diaowei welcome!"; 
-				}else if(name.equals("xuesong")){
+				}else if(content.equals("xuesong")){
 					respContent = "Xuesong welcome!";
-				}else if(name.equals("monking")){
+				}else if(content.equals("monking")){
 					respContent = "Yan welcome";
+				}else if(content.equals("queue")){
+					
+				}else if(content.equals("query")){
+					
 				}else{
 					respContent = "你在say what？";
 				}
