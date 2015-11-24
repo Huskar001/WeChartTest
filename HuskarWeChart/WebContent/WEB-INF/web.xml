@@ -15,7 +15,12 @@
 		<servlet-name>monkingtest</servlet-name>
 		<servlet-class>com.huskar.wechart.MonkingTest</servlet-class>
 	</servlet>
-
+	
+	
+	<servlet-mapping>
+		<servlet-name>wechart</servlet-name>
+		<url-pattern>/wechart</url-pattern>
+	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>monkingtest</servlet-name>
 		<url-pattern>/*</url-pattern>

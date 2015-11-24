@@ -1,6 +1,7 @@
 package com.huskar.queue;
 
 public class Consumer {
+
 	//private int num = 0;
 	//private String content="";
 	//private boolean isServiced = false;
@@ -20,6 +21,19 @@ public class Consumer {
 		return this.nameID;
 	}
 	public boolean sendMessage(){
+		return false;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		// TODO Auto-generated method stub
+		if(obj!=null){
+			Consumer consumer = (Consumer) obj;
+			if(consumer!=null){
+				if(consumer.nameID == this.nameID){
+					return true;
+				}
+			}
+		}
 		return false;
 	}
 }

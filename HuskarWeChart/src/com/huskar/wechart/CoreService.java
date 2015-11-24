@@ -5,6 +5,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.huskar.queue.Consumer;
+import com.huskar.queue.QueueCore;
 import com.huskar.respmessage.TextMessage;
 import com.huskar.util.MessageUtil;
 
@@ -52,7 +54,20 @@ public class CoreService {
 					
 				}else if(content.equals("query")){
 					
-				}else{
+				}else if(content.equals("1")){//require
+					Consumer consumer = new Consumer(fromUserName);
+					int num = QueueCore.getInstance().addConsumer(consumer);
+					if(num==-1){
+						respContent = "You are already in queue!";
+					}else{
+						respContent = "Add to queue sucess, your Num is "+num;
+					}
+				}else if(content.equals("2")){//query
+					Consumer consumer = new Consumer(fromUserName);
+					int num = QueueCore.getInstance().query(consumer);
+					respContent = "Your Num is "+ num;
+				}
+				else{
 					respContent = "ÄãÔÚsay what£¿";
 				}
 				
