@@ -4,16 +4,13 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class QueueCore {
-	private static QueueCore mQueueCore;
-	private Queue<Consumer> ConsumerList_before = new LinkedList<Consumer>();
-	private Queue<Consumer> ConsumerList_after = new LinkedList<Consumer>();
+	private static QueueCore mQueueCore=new QueueCore();;
+	private static Queue<Consumer> ConsumerList_before = new LinkedList<Consumer>();
+	private static Queue<Consumer> ConsumerList_after = new LinkedList<Consumer>();
 	private QueueCore(){
 	}
 	public static QueueCore getInstance(){
-		if(mQueueCore!=null){
-			mQueueCore = new QueueCore();
-		}
-		return mQueueCore;
+			return mQueueCore;
 	}
 	public void reset(){
 		ConsumerList_before.clear();
@@ -22,25 +19,35 @@ public class QueueCore {
 	
 	//add to last
 	public int addConsumer(Consumer consumer){
-		if(ConsumerList_before.contains(consumer)){
-			return -1;
+		synchronized(ConsumerList_before){
+			if(ConsumerList_before.contains(consumer)){
+				return -1;
+			}
+			ConsumerList_before.offer(consumer);
+			return ConsumerList_before.size();
 		}
-		ConsumerList_before.offer(consumer);
-		return ConsumerList_before.size();
 	}
 	
 	public int query(Consumer consumer){
-		int i = ((LinkedList<Consumer>) ConsumerList_before).indexOf(consumer);
-		return i;
+		synchronized(ConsumerList_before){
+			int i = ((LinkedList<Consumer>) ConsumerList_before).indexOf(consumer);
+			i++;
+			return i;
+		}
 	}
 	
-	
-	public void service(){
+	public boolean isEmpty(){
+		return ConsumerList_before.isEmpty();
+	}
+	public int service(){
 		Consumer cm = ConsumerList_before.poll();
 		if(cm!=null){
 			//cm.sendMessage();
 			//cm.......
 			ConsumerList_after.offer(cm);
+			return 0;
+		}else{
+			return -1;
 		}
 	}
 }

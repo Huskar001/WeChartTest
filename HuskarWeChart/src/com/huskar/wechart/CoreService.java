@@ -118,6 +118,8 @@ public class CoreService {
 				}
 			}
 			// 设置文本消息的内容
+			respContent = respContent +";name:"+ fromUserName; 
+			
 			textMessage.setContent(respContent);
 			// 将文本消息对象转换成xml
 			respXml = MessageUtil.messageToXml(textMessage);
