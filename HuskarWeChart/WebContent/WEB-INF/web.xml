@@ -25,7 +25,17 @@
     <servlet-name>ServiceServlet</servlet-name>
     <servlet-class>com.huskar.wechart.ServiceServlet</servlet-class>
   </servlet>
+    <servlet>
+    <servlet-name>HuskarServlet</servlet-name>
+    <servlet-class>com.huskar.wechart.HuskarServlet</servlet-class>
+  </servlet>
   
+  
+  
+  <servlet-mapping>
+    <servlet-name>HuskarServlet</servlet-name>
+    <url-pattern>/huskar</url-pattern>
+  </servlet-mapping>
   
   <servlet-mapping>
     <servlet-name>wechart</servlet-name>
@@ -33,7 +43,7 @@
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>monkingtest</servlet-name>
-    <url-pattern>/*</url-pattern>
+    <url-pattern>/monking/*</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>testservlet</servlet-name>

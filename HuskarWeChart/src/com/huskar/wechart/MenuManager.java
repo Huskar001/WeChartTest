@@ -81,25 +81,26 @@ public class MenuManager {
 	}
 
 	public static void main(String[] args) {
-		// 第三方用户唯一凭证
-		String appId = "";
-		// 第三方用户唯一凭证密钥
-		String appSecret = "";
-
-		// 调用接口获取凭证
-		Token token = CommonUtil.getToken(appId, appSecret);
-
-		if (null != token) {
-			// 创建菜单
-			boolean result = MenuUtil.createMenu(getMenu(), token.getAccessToken());
-
-			// 判断菜单创建结果
-			if (result)
-				System.out.println("ok");
-		//		log.info("菜单创建成功！");
-			else
-				System.out.println("fail");
-			//	log.info("菜单创建失败！");
-		}
+//		// 第三方用户唯一凭证
+//		String appId = "";
+//		// 第三方用户唯一凭证密钥
+//		String appSecret = "";
+//
+//		// 调用接口获取凭证
+//		Token token = CommonUtil.getToken(appId, appSecret);
+//
+//		if (null != token) {
+//			// 创建菜单
+//			boolean result = MenuUtil.createMenu(getMenu(), token.getAccessToken());
+//
+//			// 判断菜单创建结果
+//			if (result)
+//				System.out.println("ok");
+//		//		log.info("菜单创建成功！");
+//			else
+//				System.out.println("fail");
+//			//	log.info("菜单创建失败！");
+//		}
+		CommonUtil.test();
 	}
 }

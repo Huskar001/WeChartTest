@@ -1,12 +1,16 @@
 package com.huskar.wechart;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import com.huskar.queue.Consumer;
 import com.huskar.queue.QueueCore;
+import com.huskar.respmessage.Article;
+import com.huskar.respmessage.NewsMessage;
 import com.huskar.respmessage.TextMessage;
 import com.huskar.util.MessageUtil;
 
@@ -14,34 +18,34 @@ public class CoreService {
 
 	public static String processRequest(HttpServletRequest request) {
 		// TODO Auto-generated method stub
-		// xml¸ñÊ½µÄÏûÏ¢Êı¾İ
+		// xmlï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½
 		String respXml = null;
-		// Ä¬ÈÏ·µ»ØµÄÎÄ±¾ÏûÏ¢ÄÚÈİ
-		String respContent = "Î´ÖªµÄÏûÏ¢ÀàĞÍ£¡";
+		// Ä¬ï¿½Ï·ï¿½ï¿½Øµï¿½ï¿½Ä±ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½
+		String respContent = "Î´Öªï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½Í£ï¿½";
 		try {
 			//message type
 			//http://mp.weixin.qq.com/wiki/17/fc9a27730e07b9126144d9c96eaf51f9.html
 			
 			
-			// µ÷ÓÃparseXml·½·¨½âÎöÇëÇóÏûÏ¢
+			// ï¿½ï¿½ï¿½ï¿½parseXmlï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
 			Map<String, String> requestMap = MessageUtil.parseXml(request);
-			// ·¢ËÍ·½ÕÊºÅ
+			// ï¿½ï¿½ï¿½Í·ï¿½ï¿½Êºï¿½
 			String fromUserName = requestMap.get("FromUserName");
-			// ¿ª·¢ÕßÎ¢ĞÅºÅ
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î¢ï¿½Åºï¿½
 			String toUserName = requestMap.get("ToUserName");
-			// ÏûÏ¢ÀàĞÍ
+			// ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½
 			String msgType = requestMap.get("MsgType");
 
-			// »Ø¸´ÎÄ±¾ÏûÏ¢
+			// ï¿½Ø¸ï¿½ï¿½Ä±ï¿½ï¿½ï¿½Ï¢
 			TextMessage textMessage = new TextMessage();
 			textMessage.setToUserName(fromUserName);
 			textMessage.setFromUserName(toUserName);
 			textMessage.setCreateTime(new Date().getTime());
 			textMessage.setMsgType(MessageUtil.RESP_MESSAGE_TYPE_TEXT);
 
-			// ÎÄ±¾ÏûÏ¢
+			// ï¿½Ä±ï¿½ï¿½ï¿½Ï¢
 			if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_TEXT)) {
-				//respContent = "Äú·¢ËÍµÄÊÇÎÄ±¾ÏûÏ¢£¡";
+				//respContent = "ï¿½ï¿½ï¿½ï¿½ï¿½Íµï¿½ï¿½ï¿½ï¿½Ä±ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½";
 				//Content
 				String content = requestMap.get("Content");
 				if(content.equals("huskar")){
@@ -67,61 +71,85 @@ public class CoreService {
 					int num = QueueCore.getInstance().query(consumer);
 					respContent = "Your Num is "+ num;
 				}
-				else{
-					respContent = "ÄãÔÚsay what£¿";
+				else if(content.startsWith("testimg")){
+					 String str = content.substring(7);
+					 if(str.equals("")){
+						 str = "Areyoukiddingme";
+					 }
+					 Article article = new Article();
+					 article.setTitle("QRCODE TEST!!");
+					// article.setPicUrl("http://huskar.aliapp.com/86.jpg");
+					 article.setPicUrl("http://huskar.aliapp.com/huskar?name="+str+"&size=max");
+					    article.setUrl("http://huskar.aliapp.com/huskar?name="+str+"&size=max");
+					 NewsMessage newsMessage = new NewsMessage();
+					 newsMessage.setToUserName(fromUserName);
+					 newsMessage.setFromUserName(toUserName);
+					 newsMessage.setCreateTime(new Date().getTime());
+					 newsMessage.setMsgType(MessageUtil.RESP_MESSAGE_TYPE_NEWS);
+					 newsMessage.setArticleCount(1);
+					 List<Article> articleList = new ArrayList<Article>();  
+					 articleList.add(article);
+					 newsMessage.setArticles(articleList);
+					 return MessageUtil.messageToXml(newsMessage);
+				}
+				else
+				{
+					respContent = "ï¿½ï¿½ï¿½ï¿½say whatï¿½ï¿½";
 				}
 				
 			}
-			// Í¼Æ¬ÏûÏ¢
+			// Í¼Æ¬ï¿½ï¿½Ï¢
 			else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_IMAGE)) {
-				respContent = "Äú·¢ËÍµÄÊÇÍ¼Æ¬ÏûÏ¢£¡";
+				respContent = "ï¿½ï¿½ï¿½ï¿½ï¿½Íµï¿½ï¿½ï¿½Í¼Æ¬ï¿½ï¿½Ï¢ï¿½ï¿½";
+				//String url = requestMap.get("PicUrl");
+				
 			}
-			// ÓïÒôÏûÏ¢
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
 			else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_VOICE)) {
-				respContent = "Äú·¢ËÍµÄÊÇÓïÒôÏûÏ¢£¡";
+				respContent = "ï¿½ï¿½ï¿½ï¿½ï¿½Íµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½";
 			}
-			// ÊÓÆµÏûÏ¢
+			// ï¿½ï¿½Æµï¿½ï¿½Ï¢
 			else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_VIDEO)) {
-				respContent = "Äú·¢ËÍµÄÊÇÊÓÆµÏûÏ¢£¡";
+				respContent = "ï¿½ï¿½ï¿½ï¿½ï¿½Íµï¿½ï¿½ï¿½ï¿½ï¿½Æµï¿½ï¿½Ï¢ï¿½ï¿½";
 			}
-			// µØÀíÎ»ÖÃÏûÏ¢
+			// ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½Ï¢
 			else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_LOCATION)) {
-				respContent = "Äú·¢ËÍµÄÊÇµØÀíÎ»ÖÃÏûÏ¢£¡";
+				respContent = "ï¿½ï¿½ï¿½ï¿½ï¿½Íµï¿½ï¿½Çµï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½";
 			}
-			// Á´½ÓÏûÏ¢
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
 			else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_LINK)) {
-				respContent = "Äú·¢ËÍµÄÊÇÁ´½ÓÏûÏ¢£¡";
+				respContent = "ï¿½ï¿½ï¿½ï¿½ï¿½Íµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½";
 			}
-			// ÊÂ¼şÍÆËÍ
+			// ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½
 			else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_EVENT)) {
-				// ÊÂ¼şÀàĞÍ
+				// ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½
 				String eventType = requestMap.get("Event");
-				// ¹Ø×¢
+				// ï¿½ï¿½×¢
 				if (eventType.equals(MessageUtil.EVENT_TYPE_SUBSCRIBE)) {
-					respContent = "É§Äê ÄãÖÕÓÚÀ´ÁË  £¡ÄãÊÇmonking»¹ÊÇxuesong£¿";
+					respContent = "É§ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½monkingï¿½ï¿½ï¿½ï¿½xuesongï¿½ï¿½";
 				}
-				// È¡Ïû¹Ø×¢
+				// È¡ï¿½ï¿½ï¿½ï¿½×¢
 				else if (eventType.equals(MessageUtil.EVENT_TYPE_UNSUBSCRIBE)) {
-					// TODO È¡Ïû¶©ÔÄºóÓÃ»§²»»áÔÙÊÕµ½¹«ÖÚÕËºÅ·¢ËÍµÄÏûÏ¢£¬Òò´Ë²»ĞèÒª»Ø¸´
+					// TODO È¡ï¿½ï¿½ï¿½ï¿½ï¿½Äºï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ËºÅ·ï¿½ï¿½Íµï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½Ë²ï¿½ï¿½ï¿½Òªï¿½Ø¸ï¿½
 				}
-				// É¨Ãè´ø²ÎÊı¶şÎ¬Âë
+				// É¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î¬ï¿½ï¿½
 				else if (eventType.equals(MessageUtil.EVENT_TYPE_SCAN)) {
-					// TODO ´¦ÀíÉ¨Ãè´ø²ÎÊı¶şÎ¬ÂëÊÂ¼ş
+					// TODO ï¿½ï¿½ï¿½ï¿½É¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î¬ï¿½ï¿½ï¿½Â¼ï¿½
 				}
-				// ÉÏ±¨µØÀíÎ»ÖÃ
+				// ï¿½Ï±ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½
 				else if (eventType.equals(MessageUtil.EVENT_TYPE_LOCATION)) {
-					// TODO ´¦ÀíÉÏ±¨µØÀíÎ»ÖÃÊÂ¼ş
+					// TODO ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½Â¼ï¿½
 				}
-				// ×Ô¶¨Òå²Ëµ¥
+				// ï¿½Ô¶ï¿½ï¿½ï¿½Ëµï¿½
 				else if (eventType.equals(MessageUtil.EVENT_TYPE_CLICK)) {
-					// TODO ´¦Àí²Ëµ¥µã»÷ÊÂ¼ş
+					// TODO ï¿½ï¿½ï¿½ï¿½Ëµï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½
 				}
 			}
-			// ÉèÖÃÎÄ±¾ÏûÏ¢µÄÄÚÈİ
-			respContent = respContent +";name:"+ fromUserName; 
+			// ï¿½ï¿½ï¿½ï¿½ï¿½Ä±ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+			//respContent = respContent +";name:"+ fromUserName; 
 			
 			textMessage.setContent(respContent);
-			// ½«ÎÄ±¾ÏûÏ¢¶ÔÏó×ª»»³Éxml
+			// ï¿½ï¿½ï¿½Ä±ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½xml
 			respXml = MessageUtil.messageToXml(textMessage);
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -13,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.huskar.util.CommonUtil;
 import com.huskar.util.HttpTookit;
 
 /**
@@ -37,37 +38,44 @@ public class MonkingTest extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		request.setCharacterEncoding("UTF-8");
-		response.setCharacterEncoding("GB2312");
-		String url = request.getPathInfo();
-		url = url.substring(1);
-
-		url = "http://cloud.bmob.cn/8c7926c0799e9754/surl?surl=" + url;
-		String result = HttpTookit.doGet(url, null, "UTF-8", false);
-		System.out.println(result);
-		JSONObject jo;
-		PrintWriter out = response.getWriter();
-		try {
-			jo = new JSONObject(result);
-			JSONArray ja = jo.getJSONArray("results");
-			String type = ja.getJSONObject(0).getString("type");
-			String content = ja.getJSONObject(0).getString("content");
-			
-			// System.out.println("type="+type);
-			 System.out.println("content="+content);
-			if (type.equals("text")) {
-				out.println(content);
-			} else if (type.equals("url")) {
-				response.setContentType("text/html;charset=UTF-8");
-				//response.setCharacterEncoding("GB2312");
-				response.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY);
-				response.setHeader("Location", content);
-			}
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			// e.printStackTrace();
-			out.println("error:" + e.getMessage());
-		}
+		//http://localhost:8080/HuskarWeChart/monking/?huskar=diaowei
+		
+//		String name = request.getParameter("huskar");
+//		String name2 = request.getParameter("name");
+//		System.out.println("name="+name);
+//		System.out.println("name2="+name2);
+		
+//		request.setCharacterEncoding("UTF-8");
+//		response.setCharacterEncoding("GB2312");
+//		String url = request.getPathInfo();
+//		url = url.substring(1);
+//
+//		url = "http://cloud.bmob.cn/8c7926c0799e9754/surl?surl=" + url;
+//		String result = HttpTookit.doGet(url, null, "UTF-8", false);
+//		System.out.println(result);
+//		JSONObject jo;
+//		PrintWriter out = response.getWriter();
+//		try {
+//			jo = new JSONObject(result);
+//			JSONArray ja = jo.getJSONArray("results");
+//			String type = ja.getJSONObject(0).getString("type");
+//			String content = ja.getJSONObject(0).getString("content");
+//			
+//			// System.out.println("type="+type);
+//			 System.out.println("content="+content);
+//			if (type.equals("text")) {
+//				out.println(content);
+//			} else if (type.equals("url")) {
+//				response.setContentType("text/html;charset=UTF-8");
+//				//response.setCharacterEncoding("GB2312");
+//				response.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY);
+//				response.setHeader("Location", content);
+//			}
+//		} catch (JSONException e) {
+//			// TODO Auto-generated catch block
+//			// e.printStackTrace();
+//			out.println("error:" + e.getMessage());
+//		}
 
 	}
 
